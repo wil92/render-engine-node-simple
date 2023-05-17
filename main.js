@@ -124,9 +124,10 @@ function draw(pointToLook, cameraPosition) {
             // pixel movement from the center of vision in the X
             const sw = j - wMiddle;
 
-            // iterate over the faces to check if they are visible in the current pixel
+            // default background color
             let pixelColor = {r: 242, g: 241, b: 241, a: 255};
             let minDistance = 9999999;
+            // iterate over the faces to check if they are visible in the current pixel
             for (let i1 = 0; i1 < faces.length; i1++) {
                 // get face points list
                 let face = faces[i1].points;
@@ -134,9 +135,9 @@ function draw(pointToLook, cameraPosition) {
                 const rayPosition = addVector(addVector(pointToLook, mulScalarVector(sw / wMiddle, translationX)), mulScalarVector(sh / hMiddle, translationY));
                 // calculate the projection point of the ray over the current object
                 const projection = projectionInPlane(face, cameraPosition, subVector(rayPosition, cameraPosition));
+                // if ray collide with face and is the closer face
                 if (projection.collide && minDistance > projection.distance) {
                     minDistance = projection.distance;
-
                     pixelColor = faces[i1].color;
                     if (projection.isBorder) {
                         pixelColor = faces[i1].borderColor;
@@ -159,7 +160,7 @@ function draw(pointToLook, cameraPosition) {
 let cameraPosition = {x: 15, y: 15, z: 15};
 const pointToLook = {x: 0, y: 5, z: 0};
 
-function rotateCameraOverXAxis() {
+function rotateCameraOverYAxis() {
     // angle to rotate
     const angle = Math.PI / 30;
     // calculate new camera position after rotation
@@ -170,14 +171,14 @@ function rotateCameraOverXAxis() {
     };
 }
 
-// defining loop to render
 let lastTime = 0;
 // force to render no more than 30 frame per second
 const intervalPerSecond = 1000 / 30;
+// defining loop to render
 function loop(currentTime) {
     if (intervalPerSecond <= currentTime - lastTime) {
         lastTime = currentTime;
-        rotateCameraOverXAxis();
+        rotateCameraOverYAxis();
         draw(pointToLook, cameraPosition);
     }
     requestAnimationFrame(loop);
